@@ -1,0 +1,41 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.talivia-group/agent",
+  "title": "Talivia Revenue Analytics",
+  "description": "Revenue-first analytics installed and verified by AI agents through Talivia",
+  "websiteUrl": "https://talivia.com/ai-agent-kit",
+  "repository": {
+    "url": "https://github.com/talivia-group/agent",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://talivia.com/mcp"
+    }
+  ],
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@talivia/agent",
+      "version": "0.1.0",
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "mcp"
+        }
+      ],
+      "transport": { "type": "stdio" },
+      "environmentVariables": [
+        {
+          "name": "TALIVIA_API_KEY",
+          "description": "Optional. Run `talivia setup --agent <name>` and check in after browser approval to store a local credential.",
+          "format": "string",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
