@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
+import { randomUUID } from 'node:crypto';
 import { mkdtemp, rm, stat, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
@@ -11,11 +12,12 @@ import { readStoredConnection, saveConnection } from '../src/config.js';
 test('stores local credentials with private directory and file modes', async () => {
   const directory = await mkdtemp(path.join(os.tmpdir(), 'talivia-agent-test-'));
   const previous = process.env.TALIVIA_CONFIG_HOME;
+  const fixtureCredential = randomUUID();
   process.env.TALIVIA_CONFIG_HOME = directory;
 
   try {
     saveConnection({
-      apiKey: 'test-key',
+      apiKey: fixtureCredential,
       endpoint: 'https://talivia.com/mcp',
       expiresAt: '2026-10-01T00:00:00.000Z',
     });
@@ -23,7 +25,7 @@ test('stores local credentials with private directory and file modes', async () 
     const directoryMode = (await stat(directory)).mode & 0o777;
     const fileMode = (await stat(path.join(directory, 'config.json'))).mode & 0o777;
 
-    assert.equal(connection.apiKey, 'test-key');
+    assert.equal(connection.apiKey, fixtureCredential);
     assert.equal(directoryMode, 0o700);
     assert.equal(fileMode, 0o600);
   } finally {
